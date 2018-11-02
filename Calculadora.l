@@ -1,13 +1,14 @@
 %{
-#include "calculadora.tab.h"
+#include "Calculadora.tab.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
+//#define YY_DECL int yylex()
 %}
 
 //Reglas y acciones
 %%
-    [\+\-]?[0-9]+(\.[0-9]+)?        {yylval = atoi(yytext); return NUM;}
+    [\+\-]?[0-9]+(\.[0-9]+)?        {yylval = atof(yytext); return NUM;}
     0[0-7]+                         {yylval = deHexaAOctal(yytext); return NUM;}
     0[xX][0-9a-fA-F]+               {yylval = deHexaADecimal(yytext); return NUM;}
     "+"                             {return '+';}
