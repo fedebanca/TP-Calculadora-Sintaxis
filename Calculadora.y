@@ -10,7 +10,8 @@ extern FILE* yyin;
 %}
 
 %union{
-  float flotante
+  float flotante;
+  int intValue;
 }
 %token <flotante> NUM
 %token '\n' '+' '-' '*' '/' '^' '(' ')'
