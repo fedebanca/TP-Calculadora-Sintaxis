@@ -36,24 +36,24 @@ line:     '\n'
 
 // si los terminos signados no funcionan, agregarles un cero a la izquierda del signo
 exp:      term            { $$ = $1;         }
-        | '+' term        { $$ = + $2        }
-        | '-' term        { $$ = - $2        }
+        | '+' term        { $$ = + $2;        }
+        | '-' term        { $$ = - $2;        }
         | exp '+' term    { $$ = $1 + $3;    }
         | exp '-' term    { $$ = $1 - $3;    }
 ;
 
 term:     pot             { $$ = $1;         }
-        | term '*' fact   { $$ = $1 * $3     }
-        | term '/' fact   { $$ = $1 / $3     }
+        | term '*' fact   { $$ = $1 * $3;     }
+        | term '/' fact   { $$ = $1 / $3;     }
 ;
 
-pot:      fact            { $$ = $1          }
-        | pot '^' fact    { $$ = pow ($1,$3) }
+pot:      fact            { $$ = $1;          }
+        | pot '^' fact    { $$ = pow ($1,$3); }
 
 ;
 
-fact:     NUM             { $$ = $1          }
-        | '(' exp ')'     { $$ = $2        }
+fact:     NUM             { $$ = $1;          }
+        | '(' exp ')'     { $$ = $2;        }
 ;
 
 
@@ -67,7 +67,7 @@ yyerror (s)  /* Llamada por yyparse ante un error */
 
 main ()
 {
-   if (!(yyin = fopen("calcular.txt", "r"))
+   if (!(yyin = fopen("calcular.txt", "r")))
    printf("\nNo se puede abrir el archivo");
    else 
    yyparse();
