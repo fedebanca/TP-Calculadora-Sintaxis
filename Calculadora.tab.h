@@ -42,9 +42,6 @@
      NUM = 258
    };
 #endif
-/* Tokens.  */
-#define NUM 258
-
 
 
 
@@ -53,15 +50,14 @@ typedef union YYSTYPE
 {
 
 /* Line 1676 of yacc.c  */
-#line 12 "calculadora.y"
+#line 11 "calculadora.y"
 
-  float flotante;
-  int intValue;
+ float real;
 
 
 
 /* Line 1676 of yacc.c  */
-#line 65 "y.tab.h"
+#line 61 "calculadora.tab.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */

@@ -1,62 +1,43 @@
-/* Calculadora de notacion normal */
+/* Calculadora de notaci�n infija (usual) */
 
 %{
 #include <math.h>
 #include <stdio.h>
 #include <ctype.h>
-extern int yylex();
-extern int yyparse();
-extern FILE* yyin;
+#include <stdlib.h>
 %}
 
-%union{
-  float flotante;
-  int intValue;
+%union
+{
+ float real;
 }
-%token <flotante> NUM
-%token '\n' '+' '-' '*' '/' '^' '(' ')'
+
+%token <real> NUM
+%type <real> exp
+
 %left '+' '-'
-%left '*' '/'
-%right '^'
-%right '(' ')'
-%type <flotante> exp
-%type <flotante> term
-%type <flotante> pot
-%type <flotante> fact
+%right '*' '/'
+%nonassoc '^'
 
-%% /* A continuacion las reglas gramaticales y las acciones */
 
-input:    /* vacio */
+%% /* A continuaci�n las reglas gramaticales y las acciones */
+
+input:    /* vac�o */
         | input line
 ;
 
 line:     '\n'
-        | exp '\n'  { printf ("\t %d\n", $1); }
+        | exp '\n'  { printf ("\t %f\n", $1); }
 ;
 
-// si los terminos signados no funcionan, agregarles un cero a la izquierda del signo
-exp:      term            { $$ = $1;         }
-        | '+' term        { $$ = + $2;        }
-        | '-' term        { $$ = - $2;        }
-        | exp '+' term    { $$ = $1 + $3;    }
-        | exp '-' term    { $$ = $1 - $3;    }
+exp:    NUM               { $$ = $1             }
+        |'(' '-' NUM ')'  { $$ = - $3           }
+        | exp '+' exp     { $$ = $1 + $3;       }
+        | exp '-' exp     { $$ = $1 - $3;       }
+        | exp '*'  exp     { $$ = $1 * $3;       }
+        | exp '/' exp     { $$ = $1 / $3;       }
+        | exp '^' exp     { $$ = pow($1,$3);    }
 ;
-
-term:     pot             { $$ = $1;         }
-        | term '*' fact   { $$ = $1 * $3;     }
-        | term '/' fact   { $$ = $1 / $3;     }
-;
-
-pot:      fact            { $$ = $1;          }
-        | pot '^' fact    { $$ = pow ($1,$3); }
-
-;
-
-fact:     NUM             { $$ = $1;          }
-        | '(' exp ')'     { $$ = $2;        }
-;
-
-
 %%
 
 yyerror (s)  /* Llamada por yyparse ante un error */
@@ -67,12 +48,5 @@ yyerror (s)  /* Llamada por yyparse ante un error */
 
 main ()
 {
-   if (!(yyin = fopen("calcular.txt", "r")))
-   printf("\nNo se puede abrir el archivo");
-   else 
-   yyparse();
-
-   fclose(yyin);
-   return 0;
   yyparse ();
 }
