@@ -13,11 +13,15 @@
 }
 
 %token <real> NUM
-%type <real> exp
-
+%token '\n' '+' '-' '*' '/' '^' '(' ')'
 %left '+' '-'
-%right '*' '/'
-%nonassoc '^'
+%left '*' '/'
+%right '^'
+%right '(' ')'
+%type <real> exp
+%type <real> term
+%type <real> pot
+%type <real> fact
 
 
 %% /* A continuaci�n las reglas gramaticales y las acciones */
@@ -30,14 +34,28 @@ line:     '\n'
         | exp '\n'  { printf ("\t %f\n", $1); }
 ;
 
-exp:    NUM               { $$ = $1             }
-        |'(' '-' NUM ')'  { $$ = - $3           }
-        | exp '+' exp     { $$ = $1 + $3;       }
-        | exp '-' exp     { $$ = $1 - $3;       }
-        | exp '*'  exp     { $$ = $1 * $3;       }
-        | exp '/' exp     { $$ = $1 / $3;       }
-        | exp '^' exp     { $$ = pow($1,$3);    }
+exp:      term            { $$ = $1;         }
+        | '+' term        { $$ = + $2        }
+        | '-' term        { $$ = - $2        }
+        | exp '+' term    { $$ = $1 + $3;    }
+        | exp '-' term    { $$ = $1 - $3;    }
 ;
+
+term:     pot             { $$ = $1;         }
+        | term '*' fact   { $$ = $1 * $3     }
+        | term '/' fact   { $$ = $1 / $3     }
+;
+
+pot:      fact            { $$ = $1          }
+        | pot '^' fact    { $$ = pow ($1,$3) }
+
+;
+
+fact:     NUM             { $$ = $1          }
+        | '(' exp ')'     { $$ = $2        }
+;
+
+
 %%
 
 yyerror (s)  /* Llamada por yyparse ante un error */
