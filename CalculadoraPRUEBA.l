@@ -1,6 +1,6 @@
 
 %{
-#include "Calculadora.tab.h"
+#include "CalculadoraPrueba.tab.h"
 #include <stdlib.h>
 #include <ctype.h>
 #include <stdio.h>
